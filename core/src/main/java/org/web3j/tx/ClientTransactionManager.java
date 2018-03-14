@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.tx.response.TransactionReceiptProcessor;
 
 /**
  * TransactionManager implementation for using an Ethereum node to transact.
@@ -15,20 +16,24 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 public class ClientTransactionManager extends TransactionManager {
 
     private final Web3j web3j;
-    private final String fromAddress;
 
     public ClientTransactionManager(
             Web3j web3j, String fromAddress) {
-        super(web3j);
+        super(web3j, fromAddress);
         this.web3j = web3j;
-        this.fromAddress = fromAddress;
     }
 
     public ClientTransactionManager(
             Web3j web3j, String fromAddress, int attempts, int sleepDuration) {
-        super(web3j, attempts, sleepDuration);
+        super(web3j, attempts, sleepDuration, fromAddress);
         this.web3j = web3j;
-        this.fromAddress = fromAddress;
+    }
+
+    public ClientTransactionManager(
+            Web3j web3j, String fromAddress,
+            TransactionReceiptProcessor transactionReceiptProcessor) {
+        super(transactionReceiptProcessor, fromAddress);
+        this.web3j = web3j;
     }
 
     @Override
@@ -38,14 +43,9 @@ public class ClientTransactionManager extends TransactionManager {
             throws IOException {
 
         Transaction transaction = new Transaction(
-                fromAddress, null, gasPrice, gasLimit, to, value, data);
+                getFromAddress(), null, gasPrice, gasLimit, to, value, data);
 
         return web3j.ethSendTransaction(transaction)
                 .send();
-    }
-
-    @Override
-    public String getFromAddress() {
-        return fromAddress;
     }
 }

@@ -10,8 +10,6 @@ import org.junit.Test;
 import rx.Observable;
 import rx.Subscription;
 
-import org.web3j.utils.Observables;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -26,15 +24,37 @@ public class ObservablesTests {
         Observable<BigInteger> observable = Observables.range(
                 BigInteger.ZERO, BigInteger.valueOf(count - 1));
 
-        CountDownLatch transactionLatch = new CountDownLatch(count);
-        CountDownLatch completedLatch = new CountDownLatch(1);
-
         List<BigInteger> expected = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             expected.add(BigInteger.valueOf(i));
         }
 
-        List<BigInteger> results = new ArrayList<>(count);
+        runRangeTest(observable, expected);
+    }
+
+    @Test
+    public void testRangeDescendingObservable() throws InterruptedException {
+        int count = 10;
+
+        Observable<BigInteger> observable = Observables.range(
+                BigInteger.ZERO, BigInteger.valueOf(count - 1), false);
+
+        List<BigInteger> expected = new ArrayList<>(count);
+        for (int i = count - 1; i >= 0; i--) {
+            expected.add(BigInteger.valueOf(i));
+        }
+
+        runRangeTest(observable, expected);
+    }
+
+    private void runRangeTest(
+            Observable<BigInteger> observable, List<BigInteger> expected)
+            throws InterruptedException {
+
+        CountDownLatch transactionLatch = new CountDownLatch(expected.size());
+        CountDownLatch completedLatch = new CountDownLatch(1);
+
+        List<BigInteger> results = new ArrayList<>(expected.size());
 
         Subscription subscription = observable.subscribe(
                 result -> {

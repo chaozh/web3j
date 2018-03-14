@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.RawTransaction;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.tx.response.TransactionReceiptProcessor;
 import org.web3j.utils.Numeric;
 
 /**
@@ -27,7 +28,8 @@ public class RawTransactionManager extends TransactionManager {
     private final byte chainId;
 
     public RawTransactionManager(Web3j web3j, Credentials credentials, byte chainId) {
-        super(web3j);
+        super(web3j, credentials.getAddress());
+
         this.web3j = web3j;
         this.credentials = credentials;
 
@@ -35,8 +37,20 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     public RawTransactionManager(
-            Web3j web3j, Credentials credentials, byte chainId, int attempts, int sleepDuration) {
-        super(web3j, attempts, sleepDuration);
+            Web3j web3j, Credentials credentials, byte chainId,
+            TransactionReceiptProcessor transactionReceiptProcessor) {
+        super(transactionReceiptProcessor, credentials.getAddress());
+
+        this.web3j = web3j;
+        this.credentials = credentials;
+
+        this.chainId = chainId;
+    }
+
+    public RawTransactionManager(
+            Web3j web3j, Credentials credentials, byte chainId, int attempts, long sleepDuration) {
+        super(web3j, attempts, sleepDuration, credentials.getAddress());
+
         this.web3j = web3j;
         this.credentials = credentials;
 
@@ -52,7 +66,7 @@ public class RawTransactionManager extends TransactionManager {
         this(web3j, credentials, ChainId.NONE, attempts, sleepDuration);
     }
 
-    BigInteger getNonce() throws IOException {
+    protected BigInteger getNonce() throws IOException {
         EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
@@ -91,10 +105,5 @@ public class RawTransactionManager extends TransactionManager {
         String hexValue = Numeric.toHexString(signedMessage);
 
         return web3j.ethSendRawTransaction(hexValue).send();
-    }
-
-    @Override
-    public String getFromAddress() {
-        return credentials.getAddress();
     }
 }

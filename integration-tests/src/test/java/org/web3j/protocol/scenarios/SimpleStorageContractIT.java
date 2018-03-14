@@ -4,7 +4,6 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.generated.SimpleStorage;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -15,10 +14,10 @@ public class SimpleStorageContractIT extends Scenario {
 
     @Test
     public void testSimpleStorageContract() throws Exception {
-        Uint256 value = new Uint256(1000L);
+        BigInteger value = BigInteger.valueOf(1000L);
         SimpleStorage simpleStorage = SimpleStorage.deploy(
-                parity, ALICE, GAS_PRICE, GAS_LIMIT, BigInteger.ZERO).get();
-        assertNotNull(simpleStorage.set(value).get());
-        assertThat(simpleStorage.get().get(), is(value));
+                web3j, ALICE, GAS_PRICE, GAS_LIMIT).send();
+        assertNotNull(simpleStorage.set(value).send());
+        assertThat(simpleStorage.get().send(), is(value));
     }
 }

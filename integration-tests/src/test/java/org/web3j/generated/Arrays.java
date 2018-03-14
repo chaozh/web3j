@@ -2,54 +2,79 @@ package org.web3j.generated;
 
 import java.math.BigInteger;
 import java.util.Collections;
-import java.util.concurrent.Future;
-
+import java.util.List;
+import java.util.concurrent.Callable;
 import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
 
 /**
- * Auto generated code.<br>
- * <strong>Do not modify!</strong><br>
- * Please use {@link org.web3j.codegen.SolidityFunctionWrapperGenerator} to update.
+ * <p>Auto generated code.
+ * <p><strong>Do not modify!</strong>
+ * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 2.2.0.
+ * <p>Generated with web3j version none.
  */
-public final class Arrays extends Contract {
-    private static final String BINARY = "6060604052341561000c57fe5b5b61028c8061001c6000396000f300606060405263ffffffff60e060020a600035041663b96f54d1811461002c578063beda363b146100a6575bfe5b341561003457fe5b6040805161014081810190925261006891600491610144918390600a90839083908082843750939550610154945050505050565b60405180826101408083835b80518252602083111561009457601f199092019160209182019101610074565b50505090500191505060405180910390f35b34156100ae57fe5b6100f96004808035906020019082018035906020019080806020026020016040519081016040528093929190818152602001838360200280828437509496506101a295505050505050565b6040805160208082528351818301528351919283929083019185810191028083838215610141575b80518252602083111561014157601f199092019160209182019101610121565b5050509050019250505060405180910390f35b61015c610225565b600a60005b8181101561019a578360001982840301600a811061017b57fe5b60200201518382600a811061018c57fe5b60200201525b600101610161565b5b5050919050565b6101aa61024e565b815160405160009082908059106101be5750595b908082528060200260200182016040525b509250600090505b8181101561019a57838160010183038151811015156101f257fe5b90602001906020020151838281518110151561020a57fe5b602090810290910101525b6001016101d7565b5b5050919050565b61014060405190810160405280600a905b60008152602001906001900390816102365790505090565b604080516020810190915260008152905600a165627a7a7230582055320d18bbf364dc41bf0b6885a12ec739cacc25a300af31a3105b09ee5151d80029";
+public class Arrays extends Contract {
+    private static final String BINARY = "6060604052341561000f57600080fd5b6102da8061001e6000396000f3006060604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416633cac14c8811461005b578063b96f54d1146100c1578063beda363b14610136575b600080fd5b341561006657600080fd5b61006e610185565b60405160208082528190810183818151815260200191508051906020019060200280838360005b838110156100ad578082015183820152602001610095565b505050509050019250505060405180910390f35b34156100cc57600080fd5b6100fd600461014481600a6101406040519081016040529190828261014080828437509395506101b2945050505050565b604051808261014080838360005b8381101561012357808201518382015260200161010b565b5050505090500191505060405180910390f35b341561014157600080fd5b61006e60046024813581810190830135806020818102016040519081016040528093929190818152602001838360200280828437509496506101fe95505050505050565b61018d610274565b600060405180591061019c5750595b9080825280602002602001820160405250905090565b6101ba610286565b600a60005b818110156101f7578360001982840301600a81106101d957fe5b60200201518382600a81106101ea57fe5b60200201526001016101bf565b5050919050565b610206610274565b600080835191508160405180591061021b5750595b90808252806020026020018201604052509250600090505b818110156101f757838160010183038151811061024c57fe5b9060200190602002015183828151811061026257fe5b60209081029091010152600101610233565b60206040519081016040526000815290565b610140604051908101604052600a815b600081526020019060019003908161029657905050905600a165627a7a72305820305df0b85cbf8cf9c0720830cf03914a3044a0459d83288859a24d3dd311ef840029";
 
-    private Arrays(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+    protected Arrays(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    private Arrays(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+    protected Arrays(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
-    public Future<TransactionReceipt> fixedReverse(StaticArray<Uint256> input) {
-        Function function = new Function("fixedReverse", java.util.Arrays.<Type>asList(input), Collections.<TypeReference<?>>emptyList());
-        return executeTransactionAsync(function);
+    public RemoteCall<List> returnArray() {
+        final Function function = new Function("returnArray", 
+                java.util.Arrays.<Type>asList(), 
+                java.util.Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Address>>() {}));
+        return new RemoteCall<List>(
+                new Callable<List>() {
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public List call() throws Exception {
+                        List<Type> result = (List<Type>) executeCallSingleValueReturn(function, List.class);
+                        return convertToNative(result);
+                    }
+                });
     }
 
-    public Future<TransactionReceipt> dynamicReverse(DynamicArray<Uint256> input) {
-        Function function = new Function("dynamicReverse", java.util.Arrays.<Type>asList(input), Collections.<TypeReference<?>>emptyList());
-        return executeTransactionAsync(function);
+    public RemoteCall<TransactionReceipt> fixedReverse(List<BigInteger> input) {
+        final Function function = new Function(
+                "fixedReverse", 
+                java.util.Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.StaticArray10<org.web3j.abi.datatypes.generated.Uint256>(
+                        org.web3j.abi.Utils.typeMap(input, org.web3j.abi.datatypes.generated.Uint256.class))), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
     }
 
-    public static Future<Arrays> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit, BigInteger initialWeiValue) {
-        return deployAsync(Arrays.class, web3j, credentials, gasPrice, gasLimit, BINARY, "", initialWeiValue);
+    public RemoteCall<TransactionReceipt> dynamicReverse(List<BigInteger> input) {
+        final Function function = new Function(
+                "dynamicReverse", 
+                java.util.Arrays.<Type>asList(new org.web3j.abi.datatypes.DynamicArray<org.web3j.abi.datatypes.generated.Uint256>(
+                        org.web3j.abi.Utils.typeMap(input, org.web3j.abi.datatypes.generated.Uint256.class))), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
     }
 
-    public static Future<Arrays> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit, BigInteger initialWeiValue) {
-        return deployAsync(Arrays.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "", initialWeiValue);
+    public static RemoteCall<Arrays> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(Arrays.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+    }
+
+    public static RemoteCall<Arrays> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(Arrays.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
     }
 
     public static Arrays load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

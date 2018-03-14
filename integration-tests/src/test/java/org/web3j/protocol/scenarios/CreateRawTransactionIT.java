@@ -4,9 +4,9 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
+import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.RawTransaction;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -32,7 +32,7 @@ public class CreateRawTransactionIT extends Scenario {
         String hexValue = Numeric.toHexString(signedMessage);
 
         EthSendTransaction ethSendTransaction =
-                parity.ethSendRawTransaction(hexValue).sendAsync().get();
+                web3j.ethSendRawTransaction(hexValue).sendAsync().get();
         String transactionHash = ethSendTransaction.getTransactionHash();
 
         assertFalse(transactionHash.isEmpty());
@@ -52,7 +52,7 @@ public class CreateRawTransactionIT extends Scenario {
         String hexValue = Numeric.toHexString(signedMessage);
 
         EthSendTransaction ethSendTransaction =
-                parity.ethSendRawTransaction(hexValue).sendAsync().get();
+                web3j.ethSendRawTransaction(hexValue).sendAsync().get();
         String transactionHash = ethSendTransaction.getTransactionHash();
 
         assertFalse(transactionHash.isEmpty());
@@ -80,7 +80,7 @@ public class CreateRawTransactionIT extends Scenario {
     }
 
     BigInteger getNonce(String address) throws Exception {
-        EthGetTransactionCount ethGetTransactionCount = parity.ethGetTransactionCount(
+        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
                 address, DefaultBlockParameterName.LATEST).sendAsync().get();
 
         return ethGetTransactionCount.getTransactionCount();

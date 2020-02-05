@@ -1,27 +1,35 @@
+/*
+ * Copyright 2019 Web3 Labs Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package org.web3j.tx;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.SampleKeys;
-import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Convert;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TransferTest extends ManagedTransactionTester {
 
-    private TransactionReceipt transactionReceipt;
+    protected TransactionReceipt transactionReceipt;
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -30,38 +38,29 @@ public class TransferTest extends ManagedTransactionTester {
 
     @Test
     public void testSendFunds() throws Exception {
-        assertThat(Transfer.sendFunds(web3j, SampleKeys.CREDENTIALS, ADDRESS,
-                BigDecimal.TEN, Convert.Unit.ETHER).send(),
-                is(transactionReceipt));
+        assertEquals(
+                sendFunds(SampleKeys.CREDENTIALS, ADDRESS, BigDecimal.TEN, Convert.Unit.ETHER),
+                (transactionReceipt));
     }
 
     @Test
-    public void testSendFundsAsync() throws  Exception {
-        assertThat(Transfer.sendFunds(web3j, SampleKeys.CREDENTIALS, ADDRESS,
-                BigDecimal.TEN, Convert.Unit.ETHER).send(),
-                is(transactionReceipt));
+    public void testTransferInvalidValue() {
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () ->
+                        sendFunds(
+                                SampleKeys.CREDENTIALS,
+                                ADDRESS,
+                                new BigDecimal(0.1),
+                                Convert.Unit.WEI));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testTransferInvalidValue() throws Exception {
-        Transfer.sendFunds(web3j, SampleKeys.CREDENTIALS, ADDRESS,
-                new BigDecimal(0.1), Convert.Unit.WEI).send();
-    }
-
-    @SuppressWarnings("unchecked")
-    private TransactionReceipt prepareTransfer() throws IOException {
-        TransactionReceipt transactionReceipt = new TransactionReceipt();
-        transactionReceipt.setTransactionHash(TRANSACTION_HASH);
-        transactionReceipt.setStatus("0x1");
-        prepareTransaction(transactionReceipt);
-
-        EthGasPrice ethGasPrice = new EthGasPrice();
-        ethGasPrice.setResult("0x1");
-
-        Request<?, EthGasPrice> gasPriceRequest = mock(Request.class);
-        when(gasPriceRequest.send()).thenReturn(ethGasPrice);
-        when(web3j.ethGasPrice()).thenReturn((Request) gasPriceRequest);
-
-        return transactionReceipt;
+    protected TransactionReceipt sendFunds(
+            Credentials credentials, String toAddress, BigDecimal value, Convert.Unit unit)
+            throws Exception {
+        return new Transfer(web3j, getVerifiedTransactionManager(credentials))
+                .sendFunds(toAddress, value, unit)
+                .send();
     }
 }
